@@ -20,6 +20,8 @@ export class ClientComponent implements OnInit {
 	idClient			?:	number;
 	//image				:	String		= "../../assets/images/Clients_images/image_template.png"; // Adaptez le chemin de l'image si nécessaire
 	msg					: 	any 		= '';
+	showAddForm: boolean = false;
+	showUpdateForm: boolean = false;
 
 	constructor(
 		private clientService	:	ClientService, // Utilisez le service client
@@ -96,6 +98,7 @@ export class ClientComponent implements OnInit {
 					next: (data: Client) => {
 						console.log("Client mis à jour avec succès");
 						this.ngOnInit(); // Recharge la liste des clients après mise à jour
+						this.resetForms();
 					},
 					error: (error) => {
 						console.log(error);
@@ -103,6 +106,13 @@ export class ClientComponent implements OnInit {
 				});
 		}
 	}
+	public resetForms() {
+		this.idClient = undefined; // Réinitialise l'ID du client
+		this.addClientForm.reset(); // Réinitialise le formulaire d'ajout
+		this.updateClientForm.reset(); // Réinitialise le formulaire de modification
+		this.showAddForm = false; // Masque le formulaire
+	  }
+	  
 
 	public onUpdateClient(id: number) {
     this.idClient = id;
@@ -116,6 +126,7 @@ export class ClientComponent implements OnInit {
           this.client.setTelephone(data.telephone);
   
           this.initUpdateForm(this.client);
+		  this.showAddForm = true;
         },
         error: (error) => {
           console.log(error);

@@ -1,136 +1,68 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Clients</title>
-</head>
-<body>
-    <div class="container-fluid">
-        <h2 class="title">Liste des clients</h2>
-        <div class="ma-table">
-            <table>
-                <thead class="header">
-                    <th>id</th>
-                    <th>Nom</th>
-                    <th>Email</th>
-                    <th>Adresse</th>
-                    <th>Téléphone</th>
-                    <th>Action</th>
-                </thead>
-                <tbody>
-                    <tr *ngFor="let client of listClients">
-                        <td>{{client.idClient}}</td>
-                        <td>{{client.nom}}</td>
-                        <td>{{client.email}}</td>
-                        <td>{{client.adresse}}</td>
-                        <td>{{client.telephone}}</td>
-                        <td class="action">
-                            <svg 
-                                (click)="onUpdateClient(client.idClient)" 
-                                data-bs-toggle="modal" 
-                                data-bs-target="#editClientModal" 
-                                width="1.2em" 
-                                height="1.2em" 
-                                viewBox="0 0 16 16" 
-                                class="bi bi-pencil" 
-                                fill="blue" 
-                                xmlns="http://www.w3.org/2000/svg">
-                                <path fill-rule="evenodd" d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5L13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175l-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"/>
-                            </svg>
-                            <svg 
-                                (click)="onDeleteClient(client.idClient)" 
-                                data-bs-toggle="modal" 
-                                data-bs-target="#deleteClientModal" 
-                                width="1.2em" 
-                                height="1.2em" 
-                                viewBox="0 0 16 16" 
-                                class="bi bi-trash3-fill" 
-                                fill="red" 
-                                xmlns="http://www.w3.org/2000/svg">
-                                <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5Zm-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5ZM4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06Zm6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528ZM8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5Z"/>
-                            </svg>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-        <div class="ajouter">
-            <button data-bs-toggle="modal" data-bs-target="#addClientModal" class="btn btn-warning">Ajouter un client</button>
-        </div>
+<div class="container">
+    <h1 class="title">Gestion des Clients</h1>
+  
+    <!-- Tableau des clients -->
+    <table class="client-table">
+      <thead>
+        <tr>
+          <th>Nom</th>
+          <th>Email</th>
+          <th>Adresse</th>
+          <th>Téléphone</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let client of listClients">
+          <td>{{ client.nom }}</td>
+          <td>{{ client.email }}</td>
+          <td>{{ client.adresse }}</td>
+          <td>{{ client.telephone }}</td>
+          <td>
+            <button class="btn btn-edit" (click)="onUpdateClient(client.idClient)">Modifier</button>
+            <button class="btn btn-delete" (click)="onDeleteClient(client.idClient)">Supprimer</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  
+    <!-- Bouton pour afficher le formulaire d'ajout -->
+    <button class="btn btn-add" (click)="showAddForm = !showAddForm">Ajouter un Client</button>
+  
+    <!-- Formulaire d'ajout / modification -->
+    <div *ngIf="showAddForm" class="form-container">
+      <form [formGroup]="addClientForm" (ngSubmit)="onSubmitAdd()" *ngIf="showAddForm && !idClient">
+        <h2>Ajouter un Client</h2>
+        <label>Nom:</label>
+        <input type="text" formControlName="name" placeholder="Nom du client">
+  
+        <label>Email:</label>
+        <input type="email" formControlName="email" placeholder="Email du client">
+  
+        <label>Adresse:</label>
+        <input type="text" formControlName="address" placeholder="Adresse du client">
+  
+        <label>Téléphone:</label>
+        <input type="text" formControlName="telephone" placeholder="Téléphone du client">
+  
+        <button type="submit" class="btn btn-submit">Ajouter</button>
+      </form>
+  
+      <form [formGroup]="updateClientForm" (ngSubmit)="onSubmitUpdate()" *ngIf="showAddForm && idClient">
+        <h2>Modifier un Client</h2>
+        <label>Nom:</label>
+        <input type="text" formControlName="name" placeholder="Nom du client">
+  
+        <label>Email:</label>
+        <input type="email" formControlName="email" placeholder="Email du client">
+  
+        <label>Adresse:</label>
+        <input type="text" formControlName="address" placeholder="Adresse du client">
+  
+        <label>Téléphone:</label>
+        <input type="text" formControlName="telephone" placeholder="Téléphone du client">
+  
+        <button type="submit" class="btn btn-submit">Modifier</button>
+      </form>
     </div>
-
-    <!-- Modal to add a client-->
-    <div class="modal fade" id="addClientModal" tabindex="-1" aria-labelledby="addClientModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h3 class="modal-title" id="addClientModalLabel">Ajouter un client</h3>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <form [formGroup]="addClientForm" (ngSubmit)="onSubmitAdd()">
-                    <div class="modal-body">
-                        <div class="mb-3">
-                            <label for="name" class="col-form-label">Nom</label>
-                            <input type="text" class="form-control" id="name" formControlName="name">
-                        </div>
-                        <div class="mb-3">
-                            <label for="email" class="col-form-label">Email</label>
-                            <input type="email" class="form-control" id="email" formControlName="email">
-                        </div>
-                        <div class="mb-3">
-                            <label for="address" class="col-form-label">Adresse</label>
-                            <input type="text" class="form-control" id="address" formControlName="address">
-                        </div>
-                        <div class="mb-3">
-                            <label for="telephone" class="col-form-label">Téléphone</label>
-                            <input type="text" class="form-control" id="telephone" formControlName="telephone">
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
-                        <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Enregistrer</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal to edit a client-->
-    <div class="modal fade" id="editClientModal" tabindex="-1" aria-labelledby="editClientModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h3 class="modal-title" id="editClientModalLabel">Modifier un client</h3>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <form *ngIf="updateClientForm" [formGroup]="updateClientForm" (ngSubmit)="onSubmitUpdate()">
-                    <div class="modal-body">
-                        <div class="mb-3">
-                            <label for="name" class="col-form-label">Nom</label>
-                            <input type="text" class="form-control" id="prenom" formControlName="name" [value]="client.nom">
-                        </div>
-                        <div class="mb-3">
-                            <label for="email" class="col-form-label">Email</label>
-                            <input type="email" class="form-control" id="email" formControlName="email" [value]="client.email">
-                        </div>
-                        <div class="mb-3">
-                            <label for="address" class="col-form-label">Adresse</label>
-                            <input type="text" class="form-control" id="address" formControlName="address" [value]="client.adresse">
-                        </div>
-                        <div class="mb-3">
-                            <label for="telephone" class="col-form-label">Téléphone</label>
-                            <input type="text" class="form-control" id="telephone" formControlName="telephone" [value]="client.telephone">
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
-                        <button type="submit" class="btn btn-primary">Enregistrer</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</body>
-</html>
+  </div>
